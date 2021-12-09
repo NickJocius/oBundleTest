@@ -1,10 +1,11 @@
-import { hooks } from '@bigcommerce/stencil-utils';
+import  utils  from '@bigcommerce/stencil-utils';
+
 import CatalogPage from '../catalog';
 import compareProducts from '../global/compare-products';
 import FacetedSearch from '../common/faceted-search';
 import { createTranslationDictionary } from '../../theme/common/utils/translations-utils';
 import swal from '../global/sweet-alert';
-
+const { hooks } = utils;
 export default class CustomCategory extends CatalogPage {
     constructor(context) {
         super(context);
@@ -35,7 +36,7 @@ export default class CustomCategory extends CatalogPage {
         const secureBaseUrl = this.context.secureBaseUrl;
         const cartUrl = this.context.urls.cart;
         let prodId = this.context.categoryProducts[0].id;
-        console.log(prodId);
+
         // use form data to hit cart api on submit on submit event
         $('#cartForm').on('submit', event => {
             event.preventDefault();
@@ -70,16 +71,15 @@ export default class CustomCategory extends CatalogPage {
 
         // add all items function
     addAllToCart(url, cartUrl, productId) {
-        
-        return fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
+        fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
             credentials: 'include',
         }).then(function (response) {
-            console.log(response)
             if (response.status) {
                 swal.fire({
                     text: 'Added All Items',
                     icon: 'success',
                 });
+                
             } else {
                 swal.fire({
                     text: 'Error Adding',
@@ -87,12 +87,21 @@ export default class CustomCategory extends CatalogPage {
                 });
             }
         }).catch(err => console.log(err));
+        this.updateCartContent()
+        
+    }
+    
+    updateCartContent() {
+        utils.api.cart.getCartQuantity({}, (err, response) => {
+            const quantity = response;
+            console.log(response)
+            const $body = $('body');
+            const $cartCounter = $('.navUser-action .cart-count');
+            $cartCounter.addClass('cart-count--positive');
+            $body.trigger('cart-quantity-update', quantity);
+        })
     }
 
-    updateCartContent() {
-        // Update cart counter
-        const $body = $('body');
-    }
     // remove all from cart function
     removeAll( cartId) {
         return fetch(`/api/storefront/carts/${cartId}`, {
