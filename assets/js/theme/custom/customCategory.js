@@ -31,6 +31,25 @@ export default class CustomCategory extends CatalogPage {
     onReady() {
         this.arrangeFocusOnSortBy();
         console.log(this.context);
+        let cartId = this.context.cartId;
+        const secureBaseUrl = this.context.secureBaseUrl;
+        const cartUrl = this.context.urls.cart;
+        let prodId = this.context.categoryProducts[0].id;
+        console.log(prodId);
+        // use form data to hit cart api on submit on submit event
+        $('#cartForm').on('submit', event => {
+            event.preventDefault();
+            let pId = prodId.toString();
+            this.addAllToCart(secureBaseUrl, cartUrl, pId);
+        })
+
+        // button removeAll click event handler
+        $('#removeAll').on('click', function (event) {
+            event.preventDefault();
+            remAll(cartId);
+            setTimeout(location.reload.bind(location), 3000);
+        })
+
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
 
         this.makeShopByPriceFilterAccessible();
@@ -50,27 +69,29 @@ export default class CustomCategory extends CatalogPage {
     }
 
         // add all items function
-    addAllToCart( url, cartUrl,productId) {
+    addAllToCart(url, cartUrl, productId) {
+        
         return fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
             credentials: 'include',
         }).then(function (response) {
-            if (response.status == 'ok') {
-                return response.json();
+            console.log(response)
+            if (response.status) {
+                swal.fire({
+                    text: 'Added All Items',
+                    icon: 'success',
+                });
             } else {
                 swal.fire({
                     text: 'Error Adding',
                     icon: 'error',
                 });
             }
-        })
-            .then(function (res) {
-                console.log(res);
-                swal.fire({
-                    text: 'Added All Items',
-                    icon: 'success',
-                });
-            })
-            .catch(err => console.log(err));
+        }).catch(err => console.log(err));
+    }
+
+    updateCartContent() {
+        // Update cart counter
+        const $body = $('body');
     }
     // remove all from cart function
     removeAll( cartId) {

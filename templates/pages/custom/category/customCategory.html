@@ -7,6 +7,7 @@ category:
 {{~inject 'template' template}}
 {{inject "categoryProductsPerPage" theme_settings.categorypage_products_per_page}}
 {{inject "categoryId" category.id}}
+{{inject "categoryProducts" category.products}}
 {{inject 'custDataId' custData.id}}
 {{#partial "head"}}
     {{#if pagination.category.previous}}
@@ -31,9 +32,9 @@ category:
 <!-- Added Form to add products in category to cart/remove all items from cart-->
 {{/if}}
 <div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
-    <form id="cartForm">
+    <form id="cartForm" enctype="multipart/form-data">
 
-        <input class="form-label" type="hidden" name="productId" value="{{pluck (limit category.products 1) 'id'}}" />
+        <input class="form-label" type="hidden" name="productId" value="{{pluck (limit categoryProducts 1) 'id'}}" />
         <button type="submit" id="addAll" class="button button--primary">Add all to Cart</button>
     </form>
 
