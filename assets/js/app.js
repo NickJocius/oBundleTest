@@ -33,6 +33,7 @@ const pageClasses = {
     brands: noop,
     cart: () => import('./theme/cart'),
     category: () => import('./theme/category'),
+    
     compare: () => import('./theme/compare'),
     page_contact_form: () => import('./theme/contact-us'),
     error: noop,
@@ -52,7 +53,9 @@ const pageClasses = {
     wishlists: () => import('./theme/wishlist'),
 };
 
-const customClasses = {};
+const customClasses = {
+    'pages\\custom\\category\\customCategory': () => import('./theme/custom/customCategory'),
+};
 
 /**
  * This function gets added to the global window and then called
