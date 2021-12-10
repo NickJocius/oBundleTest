@@ -31,7 +31,7 @@ export default class CustomCategory extends CatalogPage {
 
     onReady() {
         this.arrangeFocusOnSortBy();
-        console.log(this.context);
+        
         let cartId = this.context.cartId;
         let addProdUrl = this.context.categoryProducts[0].add_to_cart_url;
         let catProds = this.context.categoryProducts;
