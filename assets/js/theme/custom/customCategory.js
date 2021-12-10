@@ -34,8 +34,7 @@ export default class CustomCategory extends CatalogPage {
         console.log(this.context);
         let cartId = this.context.cartId;
         let addProdUrl = this.context.categoryProducts[0].add_to_cart_url;
-        let prodId = this.context.categoryProducts[0].id;
-        console.log(this.context)
+        let catProds = this.context.categoryProducts;
 
         // use form data to hit cart api on submit on submit event
         $('#addAll').on('click', event =>  {
@@ -47,6 +46,29 @@ export default class CustomCategory extends CatalogPage {
         $('#removeAll').on('click', event => {
             event.preventDefault();
             this.removeAll(event, cartId);
+        })
+
+                // set two empty arrays to hold current image and next image
+        var mainImages = [];
+        var rollOvers = [];
+        // add images to arrays
+        catProds.forEach(function(e, i) {
+            if (e.image.data) {
+            mainImages[0] = e.image.data;
+            }
+            if (e.images[1]) {
+            rollOvers[0] = e.images[1].data;
+            }
+        });
+        // need to change variables or error will occur
+        rollOvers.forEach(function (image, id) {
+            image = image.replace('{:size}', '500x659');
+            $('.card-image').on(" mouseover", function () {
+                $(this).attr('srcset', image);
+ 
+            }).on('mouseout', function () {
+                    $(this).attr('srcset', mainImages[0].replace('{:size}', '500x659'));
+                 })
         })
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
@@ -103,7 +125,6 @@ export default class CustomCategory extends CatalogPage {
 
             $('.swal2-confirm').on('click', event => {
             event.preventDefault();
-            console.log('Swal clicked')
             window.location.reload();
         })
         })
