@@ -55,6 +55,7 @@ const pageClasses = {
 
 const customClasses = {
     'pages\\custom\\category\\customCategory': () => import('./theme/custom/customCategory'),
+    'pages/custom/category/customCategory': () => import('./theme/custom/customCategory'),
 };
 
 /**

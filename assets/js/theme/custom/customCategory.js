@@ -33,22 +33,20 @@ export default class CustomCategory extends CatalogPage {
         this.arrangeFocusOnSortBy();
         console.log(this.context);
         let cartId = this.context.cartId;
-        const secureBaseUrl = this.context.secureBaseUrl;
-        const cartUrl = this.context.urls.cart;
+        let addProdUrl = this.context.categoryProducts[0].add_to_cart_url;
         let prodId = this.context.categoryProducts[0].id;
+        console.log(this.context)
 
         // use form data to hit cart api on submit on submit event
-        $('#cartForm').on('submit', event => {
+        $('#addAll').on('click', event =>  {
             event.preventDefault();
-            let pId = prodId.toString();
-            this.addAllToCart(secureBaseUrl, cartUrl, pId);
+            this.addAllToCart(event, addProdUrl);
         })
 
         // button removeAll click event handler
-        $('#removeAll').on('click', function (event) {
+        $('#removeAll').on('click', event => {
             event.preventDefault();
-            remAll(cartId);
-            setTimeout(location.reload.bind(location), 3000);
+            this.removeAll(event, cartId);
         })
 
         $('[data-button-type="add-cart"]').on('click', (e) => this.setLiveRegionAttributes($(e.currentTarget).next(), 'status', 'polite'));
@@ -70,8 +68,10 @@ export default class CustomCategory extends CatalogPage {
     }
 
         // add all items function
-    addAllToCart(url, cartUrl, productId) {
-        fetch(`${url}${cartUrl}?action=add&product_id=${productId}`, {
+    addAllToCart(event, prodUrl) {
+        event.preventDefault();
+        return fetch(`${prodUrl}`, {
+            method: 'POST',
             credentials: 'include',
         }).then(function (response) {
             if (response.status) {
@@ -86,24 +86,32 @@ export default class CustomCategory extends CatalogPage {
                     icon: 'error',
                 });
             }
+        }).then(() => {
+            this.updateCartContent()
         }).catch(err => console.log(err));
-        this.updateCartContent()
+        
         
     }
     
     updateCartContent() {
         utils.api.cart.getCartQuantity({}, (err, response) => {
             const quantity = response;
-            console.log(response)
             const $body = $('body');
             const $cartCounter = $('.navUser-action .cart-count');
             $cartCounter.addClass('cart-count--positive');
             $body.trigger('cart-quantity-update', quantity);
+
+            $('.swal2-confirm').on('click', event => {
+            event.preventDefault();
+            console.log('Swal clicked')
+            window.location.reload();
+        })
         })
     }
 
     // remove all from cart function
-    removeAll( cartId) {
+    removeAll(event, cartId) {
+        event.preventDefault();
         return fetch(`/api/storefront/carts/${cartId}`, {
             method: "DELETE",
             credentials: "include",
@@ -125,6 +133,8 @@ export default class CustomCategory extends CatalogPage {
                 text: 'Removed All Items',
                 icon: 'success',
             });
+        }).then(() => {
+            this.updateCartContent();
           })
             .catch(err => console.log(err));
     }

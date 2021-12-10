@@ -33,11 +33,8 @@ cart: true
 <!-- Added Form to add products in category to cart/remove all items from cart-->
 {{/if}}
 <div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
-    <form id="cartForm" enctype="multipart/form-data">
 
-        <input class="form-label" type="hidden" name="productId" value="{{pluck (limit categoryProducts 1) 'id'}}" />
-        <button type="submit" id="addAll" class="button button--primary">Add all to Cart</button>
-    </form>
+    <button type="submit" id="addAll" class="button button--primary">Add all to Cart</button>
 
     {{#if cart.items}}
     <button type="submit" id="removeAll" class="button button--primary">Remove All Items</button>
