@@ -38,17 +38,15 @@ export default class CustomCategory extends CatalogPage {
 
         // use form data to hit cart api on submit on submit event
         $('#addAll').on('click', event =>  {
-            event.preventDefault();
             this.addAllToCart(event, addProdUrl);
         })
 
         // button removeAll click event handler
         $('#removeAll').on('click', event => {
-            event.preventDefault();
             this.removeAll(event, cartId);
         })
 
-                // set two empty arrays to hold current image and next image
+         // set two empty arrays to hold current image and next image
         var mainImages = [];
         var rollOvers = [];
         // add images to arrays
@@ -139,25 +137,25 @@ export default class CustomCategory extends CatalogPage {
             headers: {
                 "Content-Type": "application/json",
             }
-        }).then(function (response) {
-            if (response == 'ok') {
-                return response.json();
-            } else {
+        }).then(response => response.text())
+        
+        .then((data) => {
+            console.log(data);
                 swal.fire({
-                    text: 'Error Removing',
-                    icon: 'error',
-                });
-            }
-        }).then(function (res) {
-            console.log(res);
-            swal.fire({
                 text: 'Removed All Items',
                 icon: 'success',
             });
-        }).then(() => {
+        })
+         .then(() => {
             this.updateCartContent();
           })
-            .catch(err => console.log(err));
+            .catch ((err) => {
+                console.log(err)
+                swal.fire({
+                text: 'Error Occured',
+                icon: 'error',
+            });
+        });
     }
 
     ariaNotifyNoProducts() {

@@ -22,8 +22,7 @@ cart: true
 {{#partial "page"}}
 {{#if customer}}
 <div class="customer-container" style="min-width: 100;">
-    <ul
-        style="display: flex; flex-direction: row; justify-content: space-around; list-style: none; font-weight: bold; font-size: larger;">
+    <ul class="user-info">
         <li class="">ID - {{customer.id}}</li>
         <li class="">Name - {{customer.name}}</li>
         <li class="">Email - {{customer.email}}</li>
@@ -32,10 +31,8 @@ cart: true
 </div>
 <!-- Added Form to add products in category to cart/remove all items from cart-->
 {{/if}}
-<div class="" style="display: flex; flex-direction: row; justify-content: space-evenly;">
-
+<div class="cart-buttons">
     <button type="submit" id="addAll" class="button button--primary">Add all to Cart</button>
-
     {{#if cart.items}}
     <button type="submit" id="removeAll" class="button button--primary">Remove All Items</button>
     {{/if}}
